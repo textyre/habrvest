@@ -1,0 +1,30 @@
+{
+  "name": "harvest",
+  "version": "1.0.0",
+  "description": "CLI tool for searching Habr.com articles",
+  "type": "module",
+  "bin": {
+    "harvest": "./dist/index.js"
+  },
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts"
+  },
+  "keywords": [
+    "habr",
+    "search",
+    "cli"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^14.0.3",
+    "he": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/he": "^1.2.3",
+    "@types/node": "^25.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
