@@ -96,6 +96,12 @@ export interface ISearchClient {
   search(query: string, order: Order, maxPages: number): Promise<FetchResult>;
 }
 
+export type TopPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'alltime';
+
+export interface IHubClient {
+  fetch(hubs: string[], maxPages: number, top?: TopPeriod): Promise<FetchResult>;
+}
+
 export interface ITransformer {
   transform(publications: Record<string, HabrPublication>, ids: string[]): Article[];
 }
