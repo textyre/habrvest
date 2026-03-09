@@ -10,3 +10,7 @@ export const REQUEST_TIMEOUT_MS = 15_000;
 
 // Habr API returns 500 on page >= 51
 export const MAX_PAGE = 50;
+
+// Cache
+export const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+export const CACHE_DIR = `${process.env.HOME}/.cache/habrvest`;

@@ -1,13 +1,22 @@
 import { MAX_RETRIES, REQUEST_TIMEOUT_MS } from './config.js';
+import { FileCache } from './cache.js';
 import { IHttpClient, ILogger, IThrottler } from './types.js';
 
 export class HttpClient implements IHttpClient {
+  private readonly cache = new FileCache();
+
   constructor(
     private readonly throttler: IThrottler,
     private readonly logger: ILogger,
   ) {}
 
   async fetchJson<T>(url: string): Promise<T> {
+    const cached = await this.cache.get<T>(url);
+    if (cached) {
+      this.logger.info(`[cache hit]`);
+      return cached;
+    }
+
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
       await this.throttler.acquire();
 
@@ -16,7 +25,9 @@ export class HttpClient implements IHttpClient {
 
       this.validateContentType(res);
 
-      return this.parseJson<T>(res, url);
+      const data = await this.parseJson<T>(res, url);
+      await this.cache.set(url, data);
+      return data;
     }
 
     throw new Error('Max retries exceeded');
