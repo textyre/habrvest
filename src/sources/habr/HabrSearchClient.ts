@@ -1,4 +1,4 @@
-import { BaseSourceClient } from '../BaseSourceClient.js';
+import { BaseSourceClient, PageResponse } from '../BaseSourceClient.js';
 import { ILogger } from '../../infrastructure/logger/ILogger.js';
 import { IHttpClient } from '../../infrastructure/http/IHttpClient.js';
 import { HABR_API_URL } from '../../infrastructure/config.js';
@@ -14,6 +14,7 @@ interface HabrPageResponse {
 export class HabrSearchClient extends BaseSourceClient {
   private query = '';
   private order: Order = 'relevance';
+  private page = 0;
 
   constructor(
     private readonly http: IHttpClient,
@@ -25,19 +26,33 @@ export class HabrSearchClient extends BaseSourceClient {
   async search(query: string, order: Order, maxPages: number): Promise<FetchResult> {
     this.query = query;
     this.order = order;
+    this.page = 0;
+    this.totalPages = 0;
     this.logger.info(`Fetching search: "${query}"...`);
-    return this.fetchPages(maxPages);
+    return this.collect(maxPages);
   }
 
-  protected async fetchPage(page: number): Promise<HabrPageResponse> {
+  protected hasMore(): boolean {
+    if (this.page === 0) return true; // first fetch always
+    return this.page < this.effectiveMax();
+  }
+
+  protected async fetchNext(): Promise<PageResponse> {
+    this.page++;
+    this.currentPage = this.page;
     const params = new URLSearchParams({
       query: this.query,
       target_type: 'posts',
       order: this.order,
-      page: String(page),
+      page: String(this.page),
       fl: 'ru',
       hl: 'ru',
     });
-    return this.http.fetchJson<HabrPageResponse>(`${HABR_API_URL}?${params}`);
+    const res = await this.http.fetchJson<HabrPageResponse>(`${HABR_API_URL}?${params}`);
+    return {
+      totalPages: res.pagesCount,
+      ids: res.publicationIds,
+      publications: res.publicationRefs,
+    };
   }
 }
