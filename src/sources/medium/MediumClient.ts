@@ -146,8 +146,12 @@ export class MediumClient extends BaseSourceClient {
     return parseInt(claps, 10) || 0;
   }
 
-  // BaseSourceClient требует реализации fetchPage — не используется в MediumClient
-  protected async fetchPage(_page: number): Promise<never> {
-    throw new Error('Use fetchTag() instead of fetchPage() for MediumClient');
+  // BaseSourceClient requires these — not used in MediumClient (replaced in Task 9)
+  protected hasMore(): boolean {
+    return false;
+  }
+
+  protected async fetchNext(): Promise<never> {
+    throw new Error('Use fetchTag() instead of fetchNext() for MediumClient');
   }
 }
