@@ -6,3 +6,4 @@ export const REQUEST_TIMEOUT_MS = 15_000;
 export const MAX_PAGE = 50;
 export const CACHE_TTL_MS = 30 * 60 * 1000;
 export const CACHE_DIR = `${process.env.HOME}/.cache/habrvest`;
+export const MEDIUM_SESSION_FILE = `${process.env.HOME}/.cache/medium-scraper/session.json`;

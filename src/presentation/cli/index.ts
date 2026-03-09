@@ -15,6 +15,7 @@ import { FormatterRegistry } from '../../formatters/FormatterRegistry.js';
 import { App } from '../../application/App.js';
 import { createSearchCommand } from './commands/SearchCommand.js';
 import { createHubCommand } from './commands/HubCommand.js';
+import { createMediumCommand } from './commands/MediumCommand.js';
 
 const logger = new Logger();
 const throttler = new Throttler(THROTTLE_MS);
@@ -34,4 +35,5 @@ const program = new Command();
 program.name('habrvest').description('CLI tool for searching Habr.com articles').version('1.0.0');
 program.addCommand(createSearchCommand(app, logger), { isDefault: true });
 program.addCommand(createHubCommand(app, logger));
+program.addCommand(createMediumCommand(logger));
 program.parse();
