@@ -4,11 +4,11 @@
   "description": "CLI tool for searching Habr.com articles",
   "type": "module",
   "bin": {
-    "harvest": "./dist/index.js",
-    "habrvest": "./dist/index.js"
+    "harvest": "./dist/presentation/cli/index.js",
+    "habrvest": "./dist/presentation/cli/index.js"
   },
   "scripts": {
-    "start": "tsx src/index.ts",
+    "start": "tsx src/presentation/cli/index.ts",
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "test": "vitest run",
